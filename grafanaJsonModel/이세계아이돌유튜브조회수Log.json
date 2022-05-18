@@ -1,0 +1,501 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 21,
+  "iteration": 1652874004969,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "links": [],
+      "options": {
+        "content": "# ------------------------------------------\n\n# **선택 유튜브 영상** [➡️▶️](${VideoURL})\n\n# **왁물원 바로가기** [➡️🐒](https://cafe.naver.com/steamindiegame)\n\n# **⭐️선택 영상 정보⭐️**\n\n### 채녈명 : ${ChannelName}\n### 영상 제목 : ${VideoKorName}\n### 등록일 : ${VideoRegistDate}",
+        "mode": "markdown"
+      },
+      "pluginVersion": "8.1.4",
+      "repeat": null,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  aktb_registDate AS \"time\",\n  aktb_totalAmount\nFROM al_korea_tax_bill\nWHERE\n  $__timeFilter(aktb_registDate)\nORDER BY aktb_registDate",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "aktb_totalAmount"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "al_korea_tax_bill",
+          "timeColumn": "aktb_registDate",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": false
+          },
+          "links": [],
+          "mappings": [
+            {
+              "options": {
+                "고세구 GOSEGU": {
+                  "color": "light-blue",
+                  "index": 0,
+                  "text": "고세구 GOSEGU"
+                },
+                "릴파 lilpa": {
+                  "color": "#4b4bf0",
+                  "index": 3,
+                  "text": "릴파 lilpa"
+                },
+                "비챤 VIichan": {
+                  "color": "light-green",
+                  "index": 5,
+                  "text": "비챤 VIichan"
+                },
+                "아이네 INE": {
+                  "color": "#8a2be2",
+                  "index": 1,
+                  "text": "아이네 INE"
+                },
+                "주르르 JURURU Ch": {
+                  "color": "#ffc8cd",
+                  "index": 2,
+                  "text": "주르르 JURURU Ch"
+                },
+                "징버거 JINGBURGER": {
+                  "color": "super-light-yellow",
+                  "index": 4,
+                  "text": "징버거 JINGBURGER"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "string"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "채널 명"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.1.4",
+      "repeat": null,
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select ycl_channelName as '채널 명', yul_title as '영상 제목', max(yvl_views) - min(yvl_views) as '증가 조회수', left(yul_registDate, 10) as '영상 게시일'\nfrom youtube_views_log\nleft join youtube_url_list on youtube_views_log.yvl_yul_no = youtube_url_list.yul_no\nleft join youtube_channel_list on youtube_url_list.yul_ycl_channelName = youtube_channel_list.ycl_channelName\nwhere left(yvl_registDate, 7) = \"$Top20SearchDate\" and ycl_channelGroupName = '이세계 아이돌'\ngroup by yvl_yul_no, left(yvl_registDate, 7)\norder by (max(yvl_views) - min(yvl_views)) desc\nlimit 20;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "aktb_totalAmount"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "al_korea_tax_bill",
+          "timeColumn": "aktb_registDate",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "검색 달 조회수 증가 TOP 20",
+      "transparent": true,
+      "type": "table"
+    },
+    {
+      "datasource": "MySQL",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 9,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 7,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 19,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "5m",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(yvl_registDate,5m),\n  yvl_views AS \"조회수\"\nFROM youtube_views_log\nWHERE\n  $__timeFilter(yvl_registDate) AND\n  yvl_yul_no IN ($VideoName)\nGROUP BY 1\nORDER BY $__timeGroup(yvl_registDate,5m)",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "yvl_views"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "조회수"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "youtube_views_log",
+          "timeColumn": "yvl_registDate",
+          "timeColumnType": "datetime",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "int",
+              "name": "",
+              "params": [
+                "yvl_yul_no",
+                "IN",
+                "($VideoName)"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "선택 영상 조회수 로그",
+      "transparent": true,
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": [
+    "YouTube"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "주르르 JURURU Ch",
+          "value": "주르르 JURURU Ch"
+        },
+        "datasource": null,
+        "definition": "select ycl_channelName from youtube_channel_list where ycl_channelGroupName = '이세계 아이돌' group by ycl_channelName",
+        "description": "YouTube Channel Name",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "ChannelName",
+        "multi": false,
+        "name": "ChannelName",
+        "options": [],
+        "query": "select ycl_channelName from youtube_channel_list where ycl_channelGroupName = '이세계 아이돌' group by ycl_channelName",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": "",
+        "current": {
+          "selected": false,
+          "text": "학교 선배에게 버튜버인 것을 들키다... (feat. 히키킹)",
+          "value": "569"
+        },
+        "datasource": null,
+        "definition": "select yul_no as \"__value\", yul_title as \"__text\" from youtube_url_list where yul_deleteDate is null and yul_ycl_channelName = \"$ChannelName\" order by yul_registDate desc",
+        "description": "YouTube Video Name",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "VideoName",
+        "multi": false,
+        "name": "VideoName",
+        "options": [],
+        "query": "select yul_no as \"__value\", yul_title as \"__text\" from youtube_url_list where yul_deleteDate is null and yul_ycl_channelName = \"$ChannelName\" order by yul_registDate desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "학교 선배에게 버튜버인 것을 들키다... (feat. 히키킹)",
+          "value": "https://www.youtube.com/watch?v=e5gAzqi3gW4"
+        },
+        "datasource": null,
+        "definition": "select yul_url as \"__value\", yul_title as \"__text\" from youtube_url_list where yul_deleteDate is null and yul_no = \"$VideoName\" order by yul_registDate desc",
+        "description": "유튜브 영상 URL",
+        "error": null,
+        "hide": 2,
+        "includeAll": false,
+        "label": "VideoURL",
+        "multi": false,
+        "name": "VideoURL",
+        "options": [],
+        "query": "select yul_url as \"__value\", yul_title as \"__text\" from youtube_url_list where yul_deleteDate is null and yul_no = \"$VideoName\" order by yul_registDate desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "2022-05",
+          "value": "2022-05"
+        },
+        "datasource": null,
+        "definition": "select left(yvl_registDate, 7) from youtube_views_log group by left(yvl_registDate, 7) order by left(yvl_registDate, 7) desc",
+        "description": "Top 20 Search Date Select",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Top20SearchDate",
+        "multi": false,
+        "name": "Top20SearchDate",
+        "options": [],
+        "query": "select left(yvl_registDate, 7) from youtube_views_log group by left(yvl_registDate, 7) order by left(yvl_registDate, 7) desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "학교 선배에게 버튜버인 것을 들키다... (feat. 히키킹)",
+          "value": "학교 선배에게 버튜버인 것을 들키다... (feat. 히키킹)"
+        },
+        "datasource": null,
+        "definition": "select yul_title from youtube_url_list where yul_deleteDate is null and yul_no = \"$VideoName\" order by yul_registDate desc",
+        "description": "select video korea name",
+        "error": null,
+        "hide": 2,
+        "includeAll": false,
+        "label": "VideoKorName",
+        "multi": false,
+        "name": "VideoKorName",
+        "options": [],
+        "query": "select yul_title from youtube_url_list where yul_deleteDate is null and yul_no = \"$VideoName\" order by yul_registDate desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "2022-05-17",
+          "value": "2022-05-17"
+        },
+        "datasource": null,
+        "definition": "select  date_format(yul_registDate, '%Y-%m-%d') from youtube_url_list where yul_deleteDate is null and yul_no = \"$VideoName\" order by yul_registDate desc",
+        "description": "VideoRegistDate",
+        "error": null,
+        "hide": 2,
+        "includeAll": false,
+        "label": "VideoRegistDate",
+        "multi": false,
+        "name": "VideoRegistDate",
+        "options": [],
+        "query": "select  date_format(yul_registDate, '%Y-%m-%d') from youtube_url_list where yul_deleteDate is null and yul_no = \"$VideoName\" order by yul_registDate desc",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "이세계아이돌 유튜브 조회수 로그",
+  "uid": "kljfo12a",
+  "version": 7
+}
